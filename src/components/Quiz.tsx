@@ -7,6 +7,7 @@ import QuestionCard from '@/components/QuestionCard';
 import ResultDisplay from '@/components/ResultDisplay';
 import ProgressBar from '@/components/ProgressBar';
 import FinalResults from '@/components/FinalResults';
+import QuestionNavigator from '@/components/QuestionNavigator';
 
 export default function Quiz() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -18,6 +19,8 @@ export default function Quiz() {
     totalQuestions: 0,
     isComplete: false,
   });
+  const [userAnswers, setUserAnswers] = useState<{ [key: number]: 'A' | 'B' | 'C' | 'D' }>({});
+  const [showNavigator, setShowNavigator] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,6 +67,12 @@ export default function Quiz() {
     const currentQuestion = questions[quizState.currentQuestionIndex];
     const isCorrect = quizState.selectedAnswer === currentQuestion.correctAnswer;
     
+    // Save the answer
+    setUserAnswers(prev => ({
+      ...prev,
+      [quizState.currentQuestionIndex]: quizState.selectedAnswer!
+    }));
+    
     setQuizState(prev => ({
       ...prev,
       showResult: true,
@@ -83,10 +92,19 @@ export default function Quiz() {
       setQuizState(prev => ({
         ...prev,
         currentQuestionIndex: nextIndex,
-        selectedAnswer: null,
+        selectedAnswer: userAnswers[nextIndex] || null,
         showResult: false,
       }));
     }
+  };
+
+  const handleQuestionJump = (questionIndex: number) => {
+    setQuizState(prev => ({
+      ...prev,
+      currentQuestionIndex: questionIndex,
+      selectedAnswer: userAnswers[questionIndex] || null,
+      showResult: false,
+    }));
   };
 
   const handleRestart = () => {
@@ -98,6 +116,7 @@ export default function Quiz() {
       totalQuestions: questions.length,
       isComplete: false,
     });
+    setUserAnswers({});
   };
 
   if (loading) {
@@ -138,9 +157,23 @@ export default function Quiz() {
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Ôn cmm vhkd&ttkn đi 
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-4">
             làm đi 
           </p>
+          <div className="mb-6 space-x-4">
+            <button
+              onClick={() => window.location.href = '/all-questions'}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
+            >
+              Xem tất cả câu hỏi & đáp án
+            </button>
+            <button
+              onClick={() => setShowNavigator(true)}
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
+            >
+              Danh sách câu hỏi ({Object.keys(userAnswers).length}/{questions.length})
+            </button>
+          </div>
         </header>
 
         {quizState.isComplete ? (
@@ -195,6 +228,15 @@ export default function Quiz() {
             )}
           </>
         )}
+
+        <QuestionNavigator
+          questions={questions}
+          currentQuestionIndex={quizState.currentQuestionIndex}
+          userAnswers={userAnswers}
+          onQuestionSelect={handleQuestionJump}
+          isOpen={showNavigator}
+          onClose={() => setShowNavigator(false)}
+        />
       </div>
     </div>
   );

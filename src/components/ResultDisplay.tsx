@@ -16,7 +16,7 @@ export default function ResultDisplay({ question, selectedAnswer, isCorrect }: R
         <div className={`inline-flex items-center px-6 py-3 rounded-full text-white font-semibold text-lg ${
           isCorrect ? 'bg-green-500' : 'bg-red-500'
         }`}>
-          {isCorrect ? '✓ Chính xác!' : '✗ Sai rồi!'}
+          {isCorrect ? '✓ Chính xác!' : '✗ NGU!'}
         </div>
       </div>
 

@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Quiz App - Kiểm tra kiến thức',
-  description: 'Ứng dụng quiz để kiểm tra kiến thức với các câu hỏi thú vị',
+  title: 'VHKD&TTKN quiz made by Vanh',
+  description: 'Học đi mấy con lợn',
 }
 
 export default function RootLayout({
