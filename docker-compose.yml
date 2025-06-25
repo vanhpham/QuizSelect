@@ -4,7 +4,7 @@ services:
   quiz-app:
     build: .
     ports:
-      - "3000:3005"
+      - "3005:3005"
     environment:
       - NODE_ENV=production
     volumes:
